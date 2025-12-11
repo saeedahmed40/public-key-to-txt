@@ -1,0 +1,48 @@
+name: 'Save Public Key to TXT File'
+description: 'A GitHub Action that saves a public key to a text file'
+author: 'saeedahmed40'
+
+inputs:
+  public-key:
+    description: 'The public key content to save'
+    required: true
+  output-file:
+    description: 'The path where the public key file should be saved'
+    required: false
+    default: 'public_key.txt'
+  create-directory:
+    description: 'Create the output directory if it does not exist'
+    required: false
+    default: 'true'
+
+outputs:
+  file-path:
+    description: 'The path to the created public key file'
+    value: ${{ steps.save-key.outputs.file-path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Save public key to file
+      id: save-key
+      shell: bash
+      run: |
+        OUTPUT_FILE="${{ inputs.output-file }}"
+        CREATE_DIR="${{ inputs.create-directory }}"
+        
+        # Create directory if requested
+        if [ "$CREATE_DIR" = "true" ]; then
+          mkdir -p "$(dirname "$OUTPUT_FILE")"
+        fi
+        
+        # Save the public key to the file
+        echo "${{ inputs.public-key }}" > "$OUTPUT_FILE"
+        
+        # Set output
+        echo "file-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+        
+        echo "✓ Public key saved to: $OUTPUT_FILE"
+
+branding:
+  icon: 'key'
+  color: 'blue'

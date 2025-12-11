@@ -1,0 +1,89 @@
+name: Test Public Key to TXT Action
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Test basic functionality
+        id: test-basic
+        uses: ./
+        with:
+          public-key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDTest1234567890 test@example.com'
+          output-file: 'test_key.txt'
+      
+      - name: Verify basic test
+        run: |
+          if [ ! -f "test_key.txt" ]; then
+            echo "❌ Error: test_key.txt was not created"
+            exit 1
+          fi
+          echo "✓ File created successfully"
+          echo "File path from output: ${{ steps.test-basic.outputs.file-path }}"
+          echo "Content:"
+          cat test_key.txt
+      
+      - name: Test with nested directory
+        id: test-nested
+        uses: ./
+        with:
+          public-key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAITest nested@example.com'
+          output-file: 'keys/nested/test_key.pub'
+      
+      - name: Verify nested directory test
+        run: |
+          if [ ! -f "keys/nested/test_key.pub" ]; then
+            echo "❌ Error: keys/nested/test_key.pub was not created"
+            exit 1
+          fi
+          echo "✓ Nested directory file created successfully"
+          echo "Content:"
+          cat keys/nested/test_key.pub
+      
+      - name: Test with default output path
+        uses: ./
+        with:
+          public-key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDefault1234567890 default@example.com'
+      
+      - name: Verify default path test
+        run: |
+          if [ ! -f "public_key.txt" ]; then
+            echo "❌ Error: public_key.txt (default) was not created"
+            exit 1
+          fi
+          echo "✓ Default path file created successfully"
+          echo "Content:"
+          cat public_key.txt
+      
+      - name: Test with multiline key
+        uses: ./
+        with:
+          public-key: |
+            ---- BEGIN SSH2 PUBLIC KEY ----
+            Comment: "Test Multiline Key"
+            AAAAB3NzaC1yc2EAAAADAQABAAABgQDMultiline1234567890
+            ---- END SSH2 PUBLIC KEY ----
+          output-file: 'multiline_key.txt'
+      
+      - name: Verify multiline test
+        run: |
+          if [ ! -f "multiline_key.txt" ]; then
+            echo "❌ Error: multiline_key.txt was not created"
+            exit 1
+          fi
+          echo "✓ Multiline key file created successfully"
+          echo "Content:"
+          cat multiline_key.txt
+      
+      - name: All tests passed
+        run: echo "✅ All tests passed successfully!"

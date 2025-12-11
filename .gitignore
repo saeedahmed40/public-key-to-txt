@@ -1,0 +1,21 @@
+# Generated key files
+*.pub
+*.pem
+*.key
+*_key.txt
+public_key.txt
+
+# Test artifacts
+keys/
+.ssh/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
