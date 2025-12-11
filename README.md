@@ -99,12 +99,12 @@ jobs:
   uses: saeedahmed40/public-key-to-txt@v1
   with:
     public-key: ${{ secrets.SSH_PUBLIC_KEY }}
-    output-file: '~/.ssh/id_rsa.pub'
+    output-file: '$HOME/.ssh/id_rsa.pub'
 
 - name: Configure SSH
   run: |
-    chmod 644 ~/.ssh/id_rsa.pub
-    ssh-keygen -l -f ~/.ssh/id_rsa.pub
+    chmod 644 $HOME/.ssh/id_rsa.pub
+    ssh-keygen -l -f $HOME/.ssh/id_rsa.pub
 ```
 
 ### 2. Deployment Keys

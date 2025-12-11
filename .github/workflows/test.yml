@@ -69,10 +69,10 @@ jobs:
         uses: ./
         with:
           public-key: |
-            ---- BEGIN SSH2 PUBLIC KEY ----
+            ----- BEGIN SSH2 PUBLIC KEY -----
             Comment: "Test Multiline Key"
             AAAAB3NzaC1yc2EAAAADAQABAAABgQDMultiline1234567890
-            ---- END SSH2 PUBLIC KEY ----
+            ----- END SSH2 PUBLIC KEY -----
           output-file: 'multiline_key.txt'
       
       - name: Verify multiline test

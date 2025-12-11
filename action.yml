@@ -35,8 +35,8 @@ runs:
           mkdir -p "$(dirname "$OUTPUT_FILE")"
         fi
         
-        # Save the public key to the file
-        echo "${{ inputs.public-key }}" > "$OUTPUT_FILE"
+        # Save the public key to the file using printf for better security
+        printf '%s\n' "${{ inputs.public-key }}" > "$OUTPUT_FILE"
         
         # Set output
         echo "file-path=$OUTPUT_FILE" >> $GITHUB_OUTPUT
